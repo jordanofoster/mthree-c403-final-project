@@ -4,6 +4,7 @@ import com.jfoster.finalproject.dto.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public interface BankSystemController {
     ResponseEntity<List<BankTransaction>> getTransactions();
 
     @GetMapping("/transactions/{timestamp}")
-    BankTransaction getTransactionByTimestamp(@PathVariable("timestamp") LocalDateTime timestamp);
+    BankTransaction getTransactionByTimestamp(@PathVariable("timestamp") Timestamp timestamp);
 
     // Update
     @PutMapping("/customers/{id}")

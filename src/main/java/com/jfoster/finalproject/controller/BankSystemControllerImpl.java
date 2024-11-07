@@ -8,6 +8,7 @@ import com.jfoster.finalproject.service.BankCustomerService;
 import com.jfoster.finalproject.service.BankTransactionService;
 import org.springframework.http.ResponseEntity;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -72,7 +73,7 @@ public class BankSystemControllerImpl implements BankSystemController {
     }
 
     @Override
-    public BankTransaction getTransactionByTimestamp(LocalDateTime timestamp) {
+    public BankTransaction getTransactionByTimestamp(Timestamp timestamp) {
         throw new UnsupportedOperationException("Method not implemented.");
 
     }
