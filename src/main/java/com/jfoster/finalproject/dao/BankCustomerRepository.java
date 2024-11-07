@@ -5,14 +5,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public interface BankCustomerRepository extends JpaRepository<BankCustomer, Long> {
 
-    void createCustomer(BankCustomer c);
-    BankCustomer getCustomerById(long customerId);
-    ArrayList<BankCustomer> getAllCustomers();
-    void updateCustomer(long customerId, BankCustomer c);
-    void deleteCustomer(BankCustomer c);
+    List<BankCustomer> findByName(String name);
+    List<BankCustomer> findByAddress(String address);
+    List<BankCustomer> findByPhone(String phone);
+    List<BankCustomer> findByEmail(String email);
 
 }

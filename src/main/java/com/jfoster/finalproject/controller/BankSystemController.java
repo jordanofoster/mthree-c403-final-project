@@ -57,6 +57,6 @@ public interface BankSystemController {
     void deleteAccountById(@PathVariable("id") int id);
 
     @DeleteMapping("/transactions/{timestamp}")
-    void deleteTransactionById(@PathVariable("timestamp") LocalDateTime timestamp);
+    void deleteTransactionByTimestamp(@PathVariable("timestamp") LocalDateTime timestamp);
 
 }

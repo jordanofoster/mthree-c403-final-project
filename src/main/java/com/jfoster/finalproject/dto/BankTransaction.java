@@ -1,10 +1,10 @@
 package com.jfoster.finalproject.dto;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 public interface BankTransaction {
-    LocalDateTime getTransactionTime();
+    Timestamp getTransactionTimestamp();
     BankAccount getSendingAccount();
     BankAccount getReceivingAccount();
     BigDecimal getTransactionAmount();
