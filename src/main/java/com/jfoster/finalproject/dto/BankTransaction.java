@@ -5,8 +5,8 @@ import java.sql.Timestamp;
 
 public interface BankTransaction {
     Timestamp getTransactionTimestamp();
-    BankAccount getSendingAccount();
-    BankAccount getReceivingAccount();
+    BankAccountImpl getSendingAccount();
+    BankAccountImpl getReceivingAccount();
     BigDecimal getTransactionAmount();
     String getTransactionMethod();
 }

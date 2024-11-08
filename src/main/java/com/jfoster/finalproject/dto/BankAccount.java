@@ -1,16 +1,23 @@
 package com.jfoster.finalproject.dto;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.security.InvalidParameterException;
 
+/**
+ * Interface that represents a bank account within the system.
+ * @author Jordan Foster
+ * @version 1
+ */
 public interface BankAccount {
-    BigDecimal getBalance();
-    void deposit(BigDecimal amount);
-    void withdraw(BigDecimal amount);
-    String getAccountNumber();
+    Long getAccountNumber();
+    BankCustomerImpl getAccountOwner();
     String getSortCode();
-    String getIBAN();
-    void addTransaction(BankTransaction t);
-    List<BankTransaction> getTransactions();
-    BankTransaction getTransactionById();
+    String getIban();
+    BigDecimal getBalance();
+    BigDecimal getMaxOverdraft();
+
+    void setSortCode(String sortCode);
+    void setIban(String iban);
+    void setBalance(BigDecimal newBalance);
+    void setMaxOverdraft(BigDecimal maxOverdraft) throws InvalidParameterException;
 }

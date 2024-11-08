@@ -7,12 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
-public interface BankTransactionRepository extends JpaRepository<BankTransaction, LocalDateTime> {
+public interface BankTransactionRepository extends JpaRepository<BankTransactionImpl, Timestamp> {
 
     List<BankTransaction> findBySendingAccount(BankAccount sending_account);
     List<BankTransaction> findByReceivingAccount(BankAccount receiving_account);

@@ -1,74 +1,89 @@
 package com.jfoster.finalproject.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
-import java.util.Set;
-
 @Entity(name="customers")
-public class BankCustomerImpl {
+public class BankCustomerImpl implements BankCustomer {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private int customer_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("customer_reference_number")
+    @Column(nullable = false)
+    private Long customerReferenceNumber;
 
+    @JsonProperty("name")
     @Column(nullable = false)
     private String name;
 
+    @JsonProperty("address")
     @Column(nullable = false)
     private String address;
 
-    @Column
-    private String phone;
+    @JsonProperty("phone_number")
+    @Column(nullable = false)
+    private String phoneNumber;
 
-    @Column
+    @JsonProperty("email")
+    @Column(nullable = false)
     private String email;
 
-    public BankCustomerImpl(String name, String address, String phone, String email) {
-        throw new UnsupportedOperationException("Constructor not implemented.");
+    /*@OneToMany(mappedBy = "accountNumber")
+    @JsonProperty("opened_accounts")
+    @Column(nullable = false)
+    private List<BankAccountImpl> openedAccounts = new Vector<BankAccountImpl>();*/
+
+    public BankCustomerImpl(){}
+
+    public BankCustomerImpl(String name, String address, String phoneNumber, String email) {
+        this.name = name;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
     }
 
-    public String getCRN() {
-        throw new UnsupportedOperationException("Method not implemented.");
+    @Override
+    public Long getCustomerReferenceNumber() {
+        return this.customerReferenceNumber;
     }
 
+    @Override
     public String getName() {
-        throw new UnsupportedOperationException("Method not implemented.");
+        return this.name;
     }
 
-    public void setName() {
-        throw new UnsupportedOperationException("Method not implemented.");
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 
+    @Override
     public String getPhoneNumber() {
-        throw new UnsupportedOperationException("Method not implemented.");
+        return this.phoneNumber;
     }
 
-    public void setPhoneNumber() {
-        throw new UnsupportedOperationException("Method not implemented.");
+    @Override
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
+    @Override
     public String getEmail() {
-        throw new UnsupportedOperationException("Method not implemented.");
+        return this.email;
     }
 
-    public void setEmail() {
-        throw new UnsupportedOperationException("Method not implemented.");
+    @Override
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public Set<BankAccount> getAccounts() {
-        throw new UnsupportedOperationException("Method not implemented.");
+    @Override
+    public String getAddress() {
+        return this.address;
     }
 
-    public BankAccount getAccountByNumber(String accountNumber) {
-        throw new UnsupportedOperationException("Method not implemented.");
+    @Override
+    public void setAddress(String address) {
+        this.address = address;
     }
-
-    public void createAccount() {
-        throw new UnsupportedOperationException("Method not implemented.");
-    }
-
-    public void deleteAccountByNumber() {
-        throw new UnsupportedOperationException("Method not implemented.");
-    }
-
 }

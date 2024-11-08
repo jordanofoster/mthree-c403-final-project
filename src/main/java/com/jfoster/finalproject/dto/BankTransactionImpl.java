@@ -1,53 +1,71 @@
 package com.jfoster.finalproject.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity(name = "transactions")
 public class BankTransactionImpl implements BankTransaction {
 
     @Id
-    Timestamp transaction_timestamp;
+    @JsonProperty("timestamp")
+    @Column(name="transaction_timestamp", nullable = false, updatable = false)
+    Timestamp transactionTimestamp = Timestamp.from(Instant.now());
 
     @ManyToOne
-    @JoinColumn(name="account_number", nullable = false)
-    private BankAccount sending_account;
+    @JsonProperty("sending_account")
+    @JoinColumn(name="sending_account", nullable = false, updatable = false)
+    private BankAccountImpl sendingAccount;
 
     @ManyToOne
-    @JoinColumn(name="account_number", nullable = false)
-    private BankAccount receiving_account;
+    @JsonProperty("receiving_account")
+    @JoinColumn(name="receiving_account", nullable = false, updatable = false)
+    private BankAccountImpl receivingAccount;
 
-    @Column
-    private BigDecimal transaction_amount;
+    @JsonProperty("transaction_amount")
+    @Column(name="transaction_amount", nullable = false, updatable = false)
+    private BigDecimal transactionAmount;
 
-    @Column
-    private String transaction_method;
+    @JsonProperty("transaction_method")
+    @Column(name="transaction_method", nullable = false)
+    private String transactionMethod;
 
-    BankTransactionImpl(Timestamp transactionTime, BankAccount sendingAccount, BankAccount receivingAccount, BigDecimal transactionAmount, String transactionMethod) {
-        throw new UnsupportedOperationException("Constructor not implemented.");
+    public BankTransactionImpl(){}
+
+    public BankTransactionImpl(BankAccountImpl sendingAccount, BankAccountImpl receivingAccount, BigDecimal transactionAmount, String transactionMethod) {
+        this.sendingAccount = sendingAccount;
+        this.receivingAccount = receivingAccount;
+        this.transactionAmount = transactionAmount.setScale(2, RoundingMode.HALF_UP);
+        this.transactionMethod = transactionMethod;
     }
 
+    @Override
     public Timestamp getTransactionTimestamp() {
-        throw new UnsupportedOperationException("Method not implemented.");
+        return this.transactionTimestamp;
     };
 
-    public BankAccount getSendingAccount() {
-        throw new UnsupportedOperationException("Method not implemented.");
+    @Override
+    public BankAccountImpl getSendingAccount() {
+        return this.sendingAccount;
     };
 
-    public BankAccount getReceivingAccount() {
-        throw new UnsupportedOperationException("Method not implemented.");
+    @Override
+    public BankAccountImpl getReceivingAccount() {
+        return this.sendingAccount;
     }
 
+    @Override
     public BigDecimal getTransactionAmount() {
-        throw new UnsupportedOperationException("Method not implemented.");
+        return this.transactionAmount;
     }
 
+    @Override
     public String getTransactionMethod() {
-        throw new UnsupportedOperationException("Method not implemented.");
+        return this.transactionMethod;
     }
 
 }

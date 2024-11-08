@@ -1,17 +1,18 @@
 package com.jfoster.finalproject.dto;
 
-import java.util.Set;
-
+/**
+ * Interface that defines a customer of the bank.
+ * @author Jordan Foster
+ * @version 1
+ */
 public interface BankCustomer {
-    String getCRN();
+    Long getCustomerReferenceNumber();
     String getName();
-    void setName();
+    void setName(String name);
     String getPhoneNumber();
-    void setPhoneNumber();
+    void setPhoneNumber(String phoneNumber);
     String getEmail();
-    void setEmail();
-    Set<BankAccount> getAccounts();
-    BankAccount getAccountByNumber(String accountNumber);
-    void createAccount();
-    void deleteAccountByNumber();
+    void setEmail(String email);
+    String getAddress();
+    void setAddress(String address);
 }

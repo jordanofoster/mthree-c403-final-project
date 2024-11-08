@@ -2,49 +2,118 @@ package com.jfoster.finalproject.dto;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.security.InvalidParameterException;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.persistence.GenerationType;
+import org.hibernate.annotations.processing.Pattern;
 
-
+/**
+ * Class implementation of the <code>BankAccount</code> interface. Classed as a JPA entity.
+ * @author Jordan Foster
+ * @version 1
+ */
 @Entity(name="accounts")
-public class BankAccountImpl {
+public class BankAccountImpl implements BankAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private int account_number;
+    private Long accountNumber;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable=false)
-    private BankCustomer account_owner;
+    @JsonProperty("account_owner")
+    @JoinColumn(name = "account_owner", nullable = false)
+    private BankCustomerImpl accountOwner;
 
+    @JsonProperty("sort_code")
     @Column(nullable = false)
-    private String sort_code;
+    private String sortCode;
 
+    @JsonProperty("iban")
     @Column(nullable = false)
     private String iban;
 
     @Column(nullable = false)
-    private BigDecimal balance = new BigDecimal("0.00").setScale(2,RoundingMode.HALF_UP);
+    private BigDecimal balance = new BigDecimal("0.00").setScale(2, RoundingMode.HALF_UP);
 
+    @JsonProperty("max_overdraft")
     @Column(nullable = false)
-    private BigDecimal max_overdraft;
+    private BigDecimal maxOverdraft;
 
-    public BankAccountImpl(BankCustomer account_owner, String sort_code, String iban, String max_overdraft) {
-        this.account_owner = account_owner;
-        this.sort_code = sort_code;
+    /*@OneToMany(mappedBy="transactionTimestamp")
+    @Column(nullable = false)
+    private List<BankTransactionImpl> transactions = new Vector<BankTransactionImpl>();*/
+
+    public BankAccountImpl(){}
+
+    /**
+     * Constructor for <code>BankAccountImpl.</code> All accounts are initialised with an empty balance; the expectation is that the user then modifies this value through class methods.
+     *
+     * @param account_owner Foreign key that represents a <code>BankCustomer</code> object (or record id from the <code>customers</code> table.
+     * @param sort_code     Sort code of the bank account. Must follow the format of [0-9]{2}-[0-9]{2}-[0-9]{2}.
+     * @param iban          IBAN of the account.
+     * @param max_overdraft Maximum overdraft of the account.
+     */
+    public BankAccountImpl(BankCustomerImpl account_owner, String sort_code, String iban, String max_overdraft) {
+        this.accountOwner = account_owner;
+        this.sortCode = sort_code;
         this.iban = iban;
-        this.max_overdraft = new BigDecimal(max_overdraft).setScale(2,RoundingMode.HALF_UP);
+        this.maxOverdraft = new BigDecimal(max_overdraft).setScale(2, RoundingMode.HALF_UP);
     }
 
-    void deposit(BigDecimal amount) {
-        throw new UnsupportedOperationException("Method not implemented.");
+    @Override
+    public Long getAccountNumber() {
+        return this.accountNumber;
     }
 
-    void withdraw(BigDecimal amount) {
-        throw new UnsupportedOperationException("Method not implemented.");
+    @Override
+    public BankCustomerImpl getAccountOwner() {
+        return this.accountOwner;
     }
 
-    private void setBalance(BigDecimal amount) {
-        throw new UnsupportedOperationException("Method not implemented.");
+    @Override
+    public String getSortCode() {
+        return this.sortCode;
     }
+
+    @Override
+    public String getIban() {
+        return this.iban;
+    }
+
+    /**
+     * Gets the balance of the account.
+     *
+     * @return Returns the balance in the account as a BigDecimal object with a scale of 2 and rounding mode of HALF_UP.
+     */
+    @Override
+    public BigDecimal getBalance() {
+        return this.balance;
+    }
+
+    @Override
+    public BigDecimal getMaxOverdraft() {
+        return this.maxOverdraft;
+    }
+
+    @Override
+    public void setSortCode(String sortCode) {
+        this.sortCode = sortCode;
+    }
+
+    @Override
+    public void setIban(String iban) {
+        this.iban = iban;
+    }
+
+    @Override
+    public void setBalance(BigDecimal newBalance) {
+        this.balance = newBalance.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    @Override
+    public void setMaxOverdraft(BigDecimal maxOverdraft) {
+        this.maxOverdraft = maxOverdraft.setScale(2, RoundingMode.HALF_UP);
+    }
+
 }
