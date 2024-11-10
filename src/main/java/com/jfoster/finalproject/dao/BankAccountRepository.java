@@ -10,7 +10,9 @@ import java.util.List;
 
 @Repository
 public interface BankAccountRepository extends JpaRepository<BankAccountImpl, Long> {
+
     List<BankAccount> findByAccountOwner(BankCustomer accountOwner);
     List<BankAccount> findBySortCode(String sortCode);
     List<BankAccount> findByIban(String iban);
+
 }

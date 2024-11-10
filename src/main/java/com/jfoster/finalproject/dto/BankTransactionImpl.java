@@ -2,7 +2,7 @@ package com.jfoster.finalproject.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import org.springframework.format.annotation.DateTimeFormat;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,6 +12,7 @@ import java.time.Instant;
 @Entity(name = "transactions")
 public class BankTransactionImpl implements BankTransaction {
 
+
     @Id
     @JsonProperty("timestamp")
     @Column(name="transaction_timestamp", nullable = false, updatable = false)
@@ -20,19 +21,25 @@ public class BankTransactionImpl implements BankTransaction {
 
     @ManyToOne
     @JsonProperty("sending_account")
+    @NotNull
     @JoinColumn(name="sending_account", nullable = false, updatable = false)
     private BankAccountImpl sendingAccount;
 
     @ManyToOne
     @JsonProperty("receiving_account")
+    @NotNull
     @JoinColumn(name="receiving_account", nullable = false, updatable = false)
     private BankAccountImpl receivingAccount;
 
     @JsonProperty("transaction_amount")
+    @Digits(integer=19,fraction=2)
+    @NotNull
     @Column(name="transaction_amount", nullable = false, updatable = false)
     private BigDecimal transactionAmount;
 
     @JsonProperty("transaction_method")
+    @NotNull
+    @Size(max=45)
     @Column(name="transaction_method", nullable = false)
     private String transactionMethod;
 
@@ -48,12 +55,12 @@ public class BankTransactionImpl implements BankTransaction {
     @Override
     public Timestamp getTransactionTimestamp() {
         return this.transactionTimestamp;
-    };
+    }
 
     @Override
     public BankAccountImpl getSendingAccount() {
         return this.sendingAccount;
-    };
+    }
 
     @Override
     public BankAccountImpl getReceivingAccount() {
@@ -68,6 +75,11 @@ public class BankTransactionImpl implements BankTransaction {
     @Override
     public String getTransactionMethod() {
         return this.transactionMethod;
+    }
+
+    @Override
+    public void setTransactionMethod(String transactionMethod) {
+        this.transactionMethod = transactionMethod;
     }
 
 }

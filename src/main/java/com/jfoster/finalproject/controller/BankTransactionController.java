@@ -1,7 +1,7 @@
 package com.jfoster.finalproject.controller;
 
 import com.jfoster.finalproject.dto.BankTransactionImpl;
-import org.springframework.format.annotation.DateTimeFormat;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -13,20 +13,21 @@ import java.util.List;
 public interface BankTransactionController {
 
     @InitBinder
-    public void initBinder(WebDataBinder binder);
+    void initBinder(WebDataBinder binder);
 
     @PostMapping("/transactions")
-    ResponseEntity<BankTransactionImpl> createTransaction(@RequestBody BankTransactionImpl bankTransactionObj);
+    ResponseEntity<BankTransactionImpl> createTransaction(@Valid  @RequestBody BankTransactionImpl bankTransactionObj);
 
     @GetMapping("/transactions")
     ResponseEntity<List<BankTransactionImpl>> getAllTransactions();
 
     @GetMapping("/transactions/{timestamp}")
-    ResponseEntity<BankTransactionImpl> getTransactionByTimestamp(@PathVariable("timestamp") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Timestamp timestamp);
+    ResponseEntity<BankTransactionImpl> getTransactionByTimestamp(@Valid @PathVariable("timestamp") Timestamp timestamp);
 
-    @PutMapping("/transactions/{timestamp}")
-    ResponseEntity<BankTransactionImpl> updateTransaction(@RequestBody BankTransactionImpl updatedBankTransactionObj, @PathVariable("timestamp") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Timestamp timestamp);
+    @PutMapping("/transactions/{timestamp}/update")
+    ResponseEntity<BankTransactionImpl> updateTransactionMethod(@Valid @PathVariable("timestamp") Timestamp timestamp, @Valid @RequestParam(value = "method") String transactionMethod);
 
-    @DeleteMapping("/transactions/{timestamp}")
-    void deleteTransactionByTimestamp(@PathVariable("timestamp") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Timestamp timestamp);
+    // We have no delete mapping because this would mean we'd need to double-check whether the rest of the transactions are now valid.
+    // This is obviously expensive at scale, so I think in the context of this project it's not unreasonable
+    // to /not/ do it as a design decision to demonstrate foresight.
 }

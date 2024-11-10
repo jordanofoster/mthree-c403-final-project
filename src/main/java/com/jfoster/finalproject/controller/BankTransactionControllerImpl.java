@@ -1,16 +1,13 @@
 package com.jfoster.finalproject.controller;
 
-import com.jfoster.finalproject.dao.BankTransactionRepository;
 import com.jfoster.finalproject.dto.BankTransactionImpl;
+import com.jfoster.finalproject.service.BankTransactionServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.beans.PropertyEditorSupport;
 import java.sql.Timestamp;
@@ -23,7 +20,7 @@ public class BankTransactionControllerImpl implements BankTransactionController 
 
 
     @Autowired
-    private BankTransactionRepository bankTransactionRepository;
+    private BankTransactionServiceImpl bankTransactionService;
 
     @InitBinder
     @Override
@@ -42,29 +39,23 @@ public class BankTransactionControllerImpl implements BankTransactionController 
         });
     }
 
-    public ResponseEntity<BankTransactionImpl> createTransaction(@RequestBody BankTransactionImpl bankTransactionObj) {
-        return new ResponseEntity<BankTransactionImpl>(bankTransactionRepository.saveAndFlush(bankTransactionObj), HttpStatus.CREATED);
+    @Override
+    public ResponseEntity<BankTransactionImpl> createTransaction(@Valid  @RequestBody BankTransactionImpl bankTransactionObj) {
+        return new ResponseEntity<BankTransactionImpl>(bankTransactionService.createTransaction(bankTransactionObj), HttpStatus.CREATED);
     }
 
+    @Override
     public ResponseEntity<List<BankTransactionImpl>> getAllTransactions() {
-        return ResponseEntity.ok(bankTransactionRepository.findAll());
+        return new ResponseEntity<List<BankTransactionImpl>>(bankTransactionService.getAllTransactions(), HttpStatus.OK);
     }
 
-    public ResponseEntity<BankTransactionImpl> getTransactionByTimestamp(@PathVariable("timestamp") Timestamp timestamp) {
-        BankTransactionImpl transaction = bankTransactionRepository.findById(timestamp).orElse(null);
-        return new ResponseEntity<BankTransactionImpl>(transaction, HttpStatus.OK);
+    @Override
+    public ResponseEntity<BankTransactionImpl> getTransactionByTimestamp(@Valid @PathVariable("timestamp") Timestamp timestamp) {
+        return new ResponseEntity<BankTransactionImpl>(bankTransactionService.getTransactionByTimestamp(timestamp), HttpStatus.OK);
     }
 
-    public ResponseEntity<BankTransactionImpl> updateTransaction(@RequestBody BankTransactionImpl updatedBankTransactionObj, @PathVariable("timestamp") Timestamp timestamp) {
-        if (!timestamp.equals(updatedBankTransactionObj.getTransactionTimestamp())) {
-            return new ResponseEntity<BankTransactionImpl>(HttpStatus.BAD_REQUEST);
-        } else {
-            bankTransactionRepository.saveAndFlush(updatedBankTransactionObj);
-            return new ResponseEntity<BankTransactionImpl>(updatedBankTransactionObj, HttpStatus.OK);
-        }
-    }
-
-    public void deleteTransactionByTimestamp(@PathVariable("timestamp") Timestamp timestamp) {
-        bankTransactionRepository.deleteById(timestamp);
+    @Override
+    public ResponseEntity<BankTransactionImpl> updateTransactionMethod(@Valid @PathVariable("timestamp") Timestamp timestamp, @Valid @RequestParam(value = "method") String transactionMethod) {
+        return new ResponseEntity<BankTransactionImpl>(bankTransactionService.updateTransactionMethod(timestamp, transactionMethod), HttpStatus.OK);
     }
 }

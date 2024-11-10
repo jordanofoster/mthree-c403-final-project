@@ -2,12 +2,11 @@ package com.jfoster.finalproject.dto;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.security.InvalidParameterException;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.persistence.GenerationType;
-import org.hibernate.annotations.processing.Pattern;
+import jakarta.validation.constraints.*;
 
 /**
  * Class implementation of the <code>BankAccount</code> interface. Classed as a JPA entity.
@@ -16,27 +15,41 @@ import org.hibernate.annotations.processing.Pattern;
  */
 @Entity(name="accounts")
 public class BankAccountImpl implements BankAccount {
+
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long accountNumber;
 
     @ManyToOne
     @JsonProperty("account_owner")
+    @NotNull
     @JoinColumn(name = "account_owner", nullable = false)
     private BankCustomerImpl accountOwner;
 
     @JsonProperty("sort_code")
+    @Size(min=8,max=8)
+    @Pattern(regexp = "^\\d{2}-\\d{2}-\\d{2}$")
+    @NotNull
     @Column(nullable = false)
     private String sortCode;
 
     @JsonProperty("iban")
+    @Size(max=34)
+    @NotNull
+    @Pattern(regexp = "^[A-Z]{2}\\d{2}\\d{1,30}$")
     @Column(nullable = false)
     private String iban;
 
+    @NotNull
+    @Digits(integer=19, fraction=2)
     @Column(nullable = false)
     private BigDecimal balance = new BigDecimal("0.00").setScale(2, RoundingMode.HALF_UP);
 
     @JsonProperty("max_overdraft")
+    @PositiveOrZero
+    @NotNull
+    @Digits(integer=19, fraction=2)
     @Column(nullable = false)
     private BigDecimal maxOverdraft;
 

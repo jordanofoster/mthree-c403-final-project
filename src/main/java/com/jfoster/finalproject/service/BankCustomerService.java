@@ -1,14 +1,20 @@
 package com.jfoster.finalproject.service;
 
-import com.jfoster.finalproject.dto.BankCustomer;
-import org.springframework.stereotype.Service;
+import com.jfoster.finalproject.dto.BankCustomerImpl;
+import jakarta.persistence.EntityNotFoundException;
 
-@Service
+import java.util.List;
+
 public interface BankCustomerService {
 
-    void createCustomer(BankCustomer c);
-    BankCustomer getCustomerById(long customerId);
-    void updateCustomer(long customerId, BankCustomer c);
-    void deleteCustomer(BankCustomer c);
+    BankCustomerImpl createCustomer(BankCustomerImpl bankCustomerObj);
+
+    List<BankCustomerImpl> getAllCustomers();
+
+    BankCustomerImpl getCustomerById(long id) throws EntityNotFoundException;
+
+    BankCustomerImpl updateCustomer(BankCustomerImpl updatedBankCustomerObj, long id) throws EntityNotFoundException;
+
+    void deleteCustomerById(long id);
 
 }

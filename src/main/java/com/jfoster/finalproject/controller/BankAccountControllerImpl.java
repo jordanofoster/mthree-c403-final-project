@@ -1,75 +1,55 @@
 package com.jfoster.finalproject.controller;
 
-import com.jfoster.finalproject.dao.BankAccountRepository;
 import com.jfoster.finalproject.dto.BankAccountImpl;
-import com.jfoster.finalproject.dto.BankCustomerImpl;
-import jakarta.persistence.EntityNotFoundException;
+import com.jfoster.finalproject.service.BankAccountServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @RestController
 public class BankAccountControllerImpl implements BankAccountController {
 
     @Autowired
-    private BankAccountRepository bankAccountRepository;
+    private BankAccountServiceImpl bankAccountService;
 
-    public ResponseEntity<BankAccountImpl> createAccount(BankAccountImpl bankAccount) {
-        try {
-            BankAccountImpl createdAccount = bankAccountRepository.saveAndFlush(bankAccount);
-            return new ResponseEntity<BankAccountImpl>(createdAccount, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<BankAccountImpl>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @Override
+    public ResponseEntity<BankAccountImpl> createAccount(@Valid  @RequestBody BankAccountImpl bankAccount) {
+        return new ResponseEntity<BankAccountImpl>(bankAccountService.createAccount(bankAccount), HttpStatus.CREATED);
     }
 
+    @Override
     public ResponseEntity<List<BankAccountImpl>> getAllAccounts() {
-        try {
-            List<BankAccountImpl> foundAccounts = bankAccountRepository.findAll();
-            return new ResponseEntity<List<BankAccountImpl>>(foundAccounts, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<List<BankAccountImpl>>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<List<BankAccountImpl>>(bankAccountService.getAllAccounts(), HttpStatus.OK);
     }
 
-    public ResponseEntity<BankAccountImpl> getAccountById(long id) {
-        try {
-            BankAccountImpl foundAccount =  bankAccountRepository.findById(id).orElseThrow();
-            return new ResponseEntity<BankAccountImpl>(foundAccount, HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<BankAccountImpl>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<BankAccountImpl>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @Override
+    public ResponseEntity<BankAccountImpl> getAccountById(@Valid @PathVariable("id") long id) {
+        return new ResponseEntity<BankAccountImpl>(bankAccountService.getAccountById(id), HttpStatus.OK);
     }
 
-    public ResponseEntity<BankAccountImpl> updateAccount(BankAccountImpl updatedBankAccountObj, long id) {
-        try {
-            BankAccountImpl internalBankAccountObj = bankAccountRepository.findById(id).orElseThrow();
-
-            if (internalBankAccountObj.getAccountNumber().equals(updatedBankAccountObj.getAccountNumber())) {
-                internalBankAccountObj.setSortCode(updatedBankAccountObj.getSortCode());
-                internalBankAccountObj.setIban(updatedBankAccountObj.getIban());
-                internalBankAccountObj.setBalance(updatedBankAccountObj.getBalance());
-                internalBankAccountObj.setMaxOverdraft(updatedBankAccountObj.getMaxOverdraft());
-
-                updatedBankAccountObj = bankAccountRepository.saveAndFlush(internalBankAccountObj);
-
-                return new ResponseEntity<BankAccountImpl>(updatedBankAccountObj, HttpStatus.OK);
-            } else { throw new NoSuchElementException(); }
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<BankAccountImpl>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<BankAccountImpl>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @Override
+    public ResponseEntity<BigDecimal> credit(@Valid @PathVariable("id") long id, @Valid @RequestParam(value = "amount") BigDecimal amount) {
+        return new ResponseEntity<BigDecimal>(bankAccountService.credit(id, amount), HttpStatus.OK);
     }
 
-    public void deleteAccountById(long id) {
-        bankAccountRepository.deleteById(id);
+    @Override
+    public ResponseEntity<BigDecimal> debit(@Valid @PathVariable("id") long id, @Valid @RequestParam(value = "amount") BigDecimal amount) {
+        return new ResponseEntity<BigDecimal>(bankAccountService.debit(id, amount), HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<BigDecimal> updateMaxOverdraft(@Valid @PathVariable("id") long id, @Valid @RequestParam(value = "overdraft") BigDecimal amount) {
+        return new ResponseEntity<BigDecimal>(bankAccountService.updateMaxOverdraft(id, amount), HttpStatus.OK);
+    }
+
+    @Override
+    public void deleteAccountById(@Valid @PathVariable("id") long id) {
+        bankAccountService.deleteAccountById(id);
+    }
+
 }

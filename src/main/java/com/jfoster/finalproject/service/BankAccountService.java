@@ -1,17 +1,26 @@
 package com.jfoster.finalproject.service;
 
-import com.jfoster.finalproject.dto.BankAccount;
-import org.springframework.stereotype.Service;
+import com.jfoster.finalproject.dto.BankAccountImpl;
+import jakarta.persistence.NoResultException;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.security.InvalidParameterException;
+import java.util.List;
 
-@Service
 public interface BankAccountService {
 
-    void createAccount(BankAccount a);
-    BankAccount getAccountById(int id);
-    ArrayList<BankAccount> getAllAccounts();
-    void updateAccount(int accountNumber, BankAccount a);
-    void deleteAccount(BankAccount a);
+    BankAccountImpl createAccount(BankAccountImpl bankAccountObj) throws InvalidParameterException;
+
+    List<BankAccountImpl> getAllAccounts();
+
+    BankAccountImpl getAccountById(long id) throws NoResultException;
+
+    BigDecimal debit(long id, BigDecimal amount) throws InsufficientAccountBalanceException, NoResultException;
+
+    BigDecimal credit(long id, BigDecimal amount) throws InsufficientAccountBalanceException, NoResultException;
+
+    BigDecimal updateMaxOverdraft(long id, BigDecimal amount) throws InsufficientAccountBalanceException, NoResultException;
+
+    void deleteAccountById(long id) throws NoResultException;
 
 }

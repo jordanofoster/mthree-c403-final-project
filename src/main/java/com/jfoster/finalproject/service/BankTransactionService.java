@@ -1,18 +1,18 @@
 package com.jfoster.finalproject.service;
 
-import com.jfoster.finalproject.dto.BankTransaction;
-import org.springframework.stereotype.Service;
+import com.jfoster.finalproject.dto.BankTransactionImpl;
+import jakarta.persistence.EntityNotFoundException;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.util.List;
 
-@Service
 public interface BankTransactionService {
 
-    void createTransaction(BankTransaction t);
-    void getTransactionByTimestamp(BankTransaction t);
-    ArrayList<BankTransaction> getAllTransactions();
-    void updateTransaction(Timestamp timestamp, BankTransaction t);
-    void deleteTransaction(BankTransaction t);
+    BankTransactionImpl createTransaction (BankTransactionImpl bankTransactionObj) throws InsufficientAccountBalanceException, EntityNotFoundException;
 
+    List<BankTransactionImpl> getAllTransactions();
+
+    BankTransactionImpl getTransactionByTimestamp(Timestamp timestamp) throws EntityNotFoundException;
+
+    BankTransactionImpl updateTransactionMethod(Timestamp timestamp, String updatedTransactionMethod) throws EntityNotFoundException;
 }

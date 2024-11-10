@@ -2,9 +2,11 @@ package com.jfoster.finalproject.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity(name="customers")
 public class BankCustomerImpl implements BankCustomer {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,18 +15,27 @@ public class BankCustomerImpl implements BankCustomer {
     private Long customerReferenceNumber;
 
     @JsonProperty("name")
+    @NotNull
+    @Size(max=45)
     @Column(nullable = false)
     private String name;
 
     @JsonProperty("address")
+    @NotNull
+    @Size(max=45)
     @Column(nullable = false)
     private String address;
 
     @JsonProperty("phone_number")
+    @NotNull
+    @Size(max=25)
     @Column(nullable = false)
     private String phoneNumber;
 
     @JsonProperty("email")
+    @Email
+    @NotNull
+    @Size(max=254)
     @Column(nullable = false)
     private String email;
 
