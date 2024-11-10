@@ -55,7 +55,7 @@ public class BankTransactionControllerImpl implements BankTransactionController 
         return new ResponseEntity<BankTransactionImpl>(transaction, HttpStatus.OK);
     }
 
-    public ResponseEntity<BankTransactionImpl> updateTransaction(@RequestBody BankTransactionImpl updatedBankTransactionObj, @PathVariable("timestamp") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Timestamp timestamp) {
+    public ResponseEntity<BankTransactionImpl> updateTransaction(@RequestBody BankTransactionImpl updatedBankTransactionObj, @PathVariable("timestamp") Timestamp timestamp) {
         if (!timestamp.equals(updatedBankTransactionObj.getTransactionTimestamp())) {
             return new ResponseEntity<BankTransactionImpl>(HttpStatus.BAD_REQUEST);
         } else {
@@ -64,7 +64,7 @@ public class BankTransactionControllerImpl implements BankTransactionController 
         }
     }
 
-    public void deleteTransactionByTimestamp(@PathVariable("timestamp") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Timestamp timestamp) {
+    public void deleteTransactionByTimestamp(@PathVariable("timestamp") Timestamp timestamp) {
         bankTransactionRepository.deleteById(timestamp);
     }
 }

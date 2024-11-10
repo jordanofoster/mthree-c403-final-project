@@ -15,7 +15,6 @@ public class BankTransactionImpl implements BankTransaction {
     @Id
     @JsonProperty("timestamp")
     @Column(name="transaction_timestamp", nullable = false, updatable = false)
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Temporal(TemporalType.TIMESTAMP)
     Timestamp transactionTimestamp = Timestamp.from(Instant.now());
 
