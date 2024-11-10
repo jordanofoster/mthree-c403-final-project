@@ -28,11 +28,6 @@ public class BankCustomerImpl implements BankCustomer {
     @Column(nullable = false)
     private String email;
 
-    /*@OneToMany(mappedBy = "accountNumber")
-    @JsonProperty("opened_accounts")
-    @Column(nullable = false)
-    private List<BankAccountImpl> openedAccounts = new Vector<BankAccountImpl>();*/
-
     public BankCustomerImpl(){}
 
     public BankCustomerImpl(String name, String address, String phoneNumber, String email) {

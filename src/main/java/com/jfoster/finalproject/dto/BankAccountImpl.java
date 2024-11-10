@@ -40,10 +40,6 @@ public class BankAccountImpl implements BankAccount {
     @Column(nullable = false)
     private BigDecimal maxOverdraft;
 
-    /*@OneToMany(mappedBy="transactionTimestamp")
-    @Column(nullable = false)
-    private List<BankTransactionImpl> transactions = new Vector<BankTransactionImpl>();*/
-
     public BankAccountImpl(){}
 
     /**
