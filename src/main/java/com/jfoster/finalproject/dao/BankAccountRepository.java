@@ -8,6 +8,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * JPA repository interface for the BankAccount substack of the MVC System.
+ * Method definitions follow expected format for auto-generation and so they do not
+ * have javadoc definitions.
+ */
 @Repository
 public interface BankAccountRepository extends JpaRepository<BankAccountImpl, Long> {
 

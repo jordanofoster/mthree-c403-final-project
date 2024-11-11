@@ -13,10 +13,19 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Spring MVC class to handle exceptions thrown from the service layer.
+ */
 @RestControllerAdvice
 public class ControllerExceptionHandler  {
 
-    
+    /**
+     * Handler for MethodArgumentNotValidException, thrown when an input to the controller fails Spring Validator requirements.
+     * Check the DTO class definitions for more details on validation constraints.
+     * @param ex Exception to be handled.
+     * @param request Request that caused the exception.
+     * @return Sends a custom ResponseEntity detailing that the response inherently failed controller-level validation constraints.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
@@ -25,6 +34,13 @@ public class ControllerExceptionHandler  {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Handler for IllegalArgumentException. Typically thrown at the service layer when a parameter passes Spring Validator requirements
+     * but does not meet internal business logic requirements.
+     * @param ex Exception to be handled.
+     * @param request Request that caused the exception.
+     * @return Sends a custom ResponseEntity detailing that the response failed at the service-layer.
+     */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
@@ -33,6 +49,13 @@ public class ControllerExceptionHandler  {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Handler for InsufficientAccountBalanceException.
+     * Thrown when a credit is attempted (either directly or via a transaction) that would cause the account involved to exceed its maximum overdraft.
+     * @param ex Exception to be handled.
+     * @param request Request that caused the exception.
+     * @return Sends a custom ResponseEntity informing the user that the proposed transaction is illegal.
+     */
     @ExceptionHandler(InsufficientAccountBalanceException.class)
     public ResponseEntity<Object> handleInsufficientAccountBalanceException(InsufficientAccountBalanceException ex, WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
@@ -41,6 +64,13 @@ public class ControllerExceptionHandler  {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Handler for NoResultException.
+     * Thrown when a specific ID is requested as part of CRUD work that is not present in the underlying DB.
+     * @param ex Exception to be handled.
+     * @param request Request that caused the exception.
+     * @return Sends a custom ResponseEntity informing the user that no records with the ID provided exist.
+     */
     @ExceptionHandler(NoResultException.class)
     public ResponseEntity<Object> handleNoResultException(NoResultException ex, WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();

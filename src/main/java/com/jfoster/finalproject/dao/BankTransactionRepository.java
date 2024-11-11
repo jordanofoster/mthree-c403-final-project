@@ -10,6 +10,11 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
+/**
+ * JPA repository interface for the BankTransaction substack of the MVC System.
+ * Method definitions follow expected format for auto-generation and so they do not
+ * have javadoc definitions.
+ */
 @Repository
 public interface BankTransactionRepository extends JpaRepository<BankTransactionImpl, Timestamp> {
 
